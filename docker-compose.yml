@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  web:
+    image: misskey/misskey:12.84.3
+    links:
+      - db
+      - redis
+    ports:
+      - 127.0.0.1:13000:13000
+    volumes:
+      - web_files:/misskey/files
+      - ./.config:/misskey/.config:ro
+
+  redis:
+    image: redis:4.0-alpine
+    volumes:
+      - redis_data:/data
+
+  db:
+    image: postgres:12.2-alpine
+    environment:
+      - POSTGRES_PASSWORD=example-misskey-pass
+      - POSTGRES_USER=example-misskey-user
+      - POSTGRES_DB=misskey
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  web_files:
+  redis_data:
+  db_data:
+
